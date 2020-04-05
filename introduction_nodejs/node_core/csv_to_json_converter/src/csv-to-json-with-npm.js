@@ -1,15 +1,30 @@
-const fs = require('fs');
-const csvToJson = require('csvtojson/v1');
+const Fs = require('fs');
+const Stream = require('stream');
+const CsvToJson = require('csvtojson/v1');
 
-function csvToJsonWithNpm(csvFilepath, jsonFilepath) {
-    const read = fs.createReadStream(csvFilepath);
-    const write = fs.createWriteStream(jsonFilepath);
+function csvToJsonWithNpm(csvFilepath, jsonFilepath, cb) {
+    const read = Fs.createReadStream(csvFilepath);
+    const write = Fs.createWriteStream(jsonFilepath);
 
-    const converter = csvToJson({
+    const converter = CsvToJson({
         toArrayString: true,
     });
 
-    read.pipe(converter).pipe(write);
+    Stream.pipeline(
+        read,
+        converter,
+        write,
+        (err) => {
+            if (err) {
+                console.error(
+                    'Error while csv to json handling is ', err.message,
+                );
+
+                return process.exit(1);
+            }
+
+            cb();
+        });
 }
 
 module.exports = {

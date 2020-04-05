@@ -4,12 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest ./__tests__/"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "csvtojson": "2.0.10"
+  },
+  "devDependencies": {
+    "@types/jest": "25.2.1",
+    "jest": "25.2.7"
   }
 }

@@ -9,10 +9,12 @@ function main() {
     }
 
     if (!jsonFilepath) {
-        csvFilepath = path.join(process.cwd(), 'data', 'customer-data.json');
+        jsonFilepath = path.join(process.cwd(), 'data', 'customer-data.json');
     }
 
-    csvToJsonWithNpm(csvFilepath, jsonFilepath);
+    csvToJsonWithNpm(csvFilepath, jsonFilepath, () => {
+        console.log('Convert csv to json done');
+    });
 }
 
 main();

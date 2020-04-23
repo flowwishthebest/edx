@@ -1,0 +1,20 @@
+{
+  "name": "crud-mongo-rest-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "1.19.0",
+    "errorhandler": "1.5.1",
+    "express": "4.17.1",
+    "express-validator": "^6.4.0",
+    "mongodb": "3.5.6",
+    "morgan": "1.10.0"
+  }
+}

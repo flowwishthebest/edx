@@ -1,8 +1,16 @@
 const { Router } = require('express');
 const mongoose = require('mongoose');
-// const { validation } = require('../../middlewares');
-const { query, body, validationResult, param } = require('express-validator');
-const { EHttpStatus } = require('../../utils');
+const { validation } = require('../../middlewares');
+const { EHttpStatus, EDomains } = require('../../utils');
+const {
+    NotFoundException,
+} = require('../../exceptions');
+const {
+    getAccountsSchema,
+    getAccountSchema,
+    updateAccountSchema,
+    createAccountSchema,
+} = require('../../schemas');
 
 const Account = mongoose.model('Account');
 
@@ -10,25 +18,8 @@ const router = Router();
 
 router.get(
     '',
-    [
-        query('limit').isInt().toInt(),
-        query('offset').isInt().toInt(),
-    ],
+    validation(getAccountsSchema, EDomains.Accs),
     (req, res, next) => {
-        // // TODO: move to middleware
-        const errors = validationResult(req);
-        
-        if (!errors.isEmpty()) {
-            // TODO: throw custom validation error
-            return next({
-                status: EHttpStatus.BadRequest,
-                code: 'ValidationException',
-                message: 'Invalid data passed',
-                domain: 'Accounts',
-                verbose: errors.errors,
-            });
-        }
-
         const { limit, offset } = req.query;
 
         Account
@@ -44,33 +35,16 @@ router.get(
 
                 res.status(EHttpStatus.Ok).send({
                     apiVersion: 'v1',
-                    domain: 'Accounts',
+                    domain: EDomains.Accs,
                     data: docs,
                 });
             });
-    }
-);
+});
 
 router.get(
     '/:id',
-    [param('id').isString()],
+    validation(getAccountSchema, EDomains.Accs),
     (req, res, next) => {
-
-        // TODO: move to middleware
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            // TODO: throw custom validation erro
-
-            return next({
-                status: EHttpStatus.BadRequest,
-                code: 'ValidationException',
-                message: 'Invalid data passed',
-                domain: 'Accounts',
-                verbose: errors.errors,
-            });
-        }
-
         const { id } = req.params;
 
         Account
@@ -82,18 +56,17 @@ router.get(
                 }
 
                 if (!account) {
-                    return next({
-                        status: EHttpStatus.NotFound,
-                        code: 'NotFoundException',
-                        message: 'Can not find requested entity',
-                        domain: 'Accounts',
-                        verbose: errors.errors,
-                    });
+                    return next(
+                        new NotFoundException(
+                            'Can not find requested entity',
+                            EDomains.Accs
+                        )
+                    );
                 }
                 
                 res.status(EHttpStatus.Ok).send({
                     apiVersion: 'v1',
-                    domain: 'Accounts',
+                    domain: EDomains.Accs,
                     data: account,
                 });
         });
@@ -102,23 +75,8 @@ router.get(
 
 router.delete(
     '/:id',
-    [param('id').isString()],
+    validation(getAccountSchema, EDomains.Accs),
     (req, res, next) => {
-
-        // TODO: move to middleware
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            // TODO: throw custom validation erro
-
-            return next({
-                status: EHttpStatus.BadRequest,
-                code: 'ValidationException',
-                message: 'Invalid data passed',
-                domain: 'Accounts',
-            });
-        }
-
         const { id } = req.params.id;
 
         Account
@@ -130,12 +88,12 @@ router.delete(
                 }
 
                 if (!account) {
-                    return next({
-                        status: EHttpStatus.NotFound,
-                        code: 'NotFoundException',
-                        message: 'Can not find requested entity',
-                        domain: 'Accounts',
-                    });
+                    return next(
+                        new NotFoundException(
+                            'Can not find requested entity',
+                            EDomains.Accs
+                        )
+                    );
                 }
 
                 Account
@@ -154,28 +112,8 @@ router.delete(
 
 router.put(
     '/:id',
-    [
-        param('id').isString(),
-        body('balance').isInt().optional().toInt(),
-        body('name').isString().optional(),
-    ],
+    validation(updateAccountSchema, EDomains.Accs),
     (req, res, next) => {
-
-        // TODO: move to middleware
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            // TODO: throw custom validation erro
-
-            return next({
-                status: EHttpStatus.BadRequest,
-                code: 'ValidationException',
-                message: 'Invalid data passed',
-                domain: 'Accounts',
-                verbose: errors.errors,
-            });
-        }
-
         const { id } = req.params;
 
         Account
@@ -187,12 +125,12 @@ router.put(
                 }
 
                 if (!account) {
-                    return next({
-                        status: EHttpStatus.NotFound,
-                        code: 'NotFoundException',
-                        message: 'Can not find requested entity',
-                        domain: 'Accounts',
-                    });
+                    return next(
+                        new NotFoundException(
+                            'Can not find requested entity',
+                            EDomains.Accs
+                        )
+                    );
                 }
 
                 const updateData = {};
@@ -220,7 +158,7 @@ router.put(
 
                             res.status(EHttpStatus.Ok).send({
                                 apiVersion: 'v1',
-                                domain: 'Accounts',
+                                domain: EDomains.Accs,
                                 data: modified,
                             });
                         });
@@ -231,27 +169,8 @@ router.put(
 
 router.post(
     '',
-    [
-        body('balance').isInt().toInt(),
-        body('name').isString(),
-    ],
+    validation(createAccountSchema, EDomains.Accs),
     (req, res, next) => {
-
-        // TODO: move to middleware
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            // TODO: throw custom validation error
-
-            return next({
-                status: EHttpStatus.BadRequest,
-                code: 'ValidationException',
-                message: 'Invalid data passed',
-                domain: 'Accounts',
-                verbose: errors.errors,
-            });
-        }
-
         const newAccount = req.body;
 
         Account.create(newAccount, (err, account) => {

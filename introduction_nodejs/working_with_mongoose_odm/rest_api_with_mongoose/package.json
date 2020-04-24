@@ -1,0 +1,39 @@
+{
+  "private": true,
+  "name": "rest_api_with_mongoose",
+  "version": "0.0.1",
+  "description": "Assignment 4. Edx introduction nodejs course.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flowwishthebest/edx"
+  },
+  "scripts": {
+    "test": "mocha ./__tests__/",
+    "start": "node .",
+    "start:dev": "node-dev .",
+    "lint": "eslint ./lib/"
+  },
+  "keywords": [
+    "edx",
+    "nodejs",
+    "express",
+    "mongoose",
+    "mongodb"
+  ],
+  "author": "Ilya P. <togowiththeflow@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "4.17.1",
+    "mongoose": "5.9.10",
+    "body-parser": "1.19.0",
+    "express-validator": "^6.4.0",
+    "morgan": "1.10.0"
+  },
+  "devDependencies": {
+    "eslint": "6.8.0",
+    "mocha": "7.1.1",
+    "node-dev": "4.0.0",
+    "supertest": "4.0.2"
+  }
+}
